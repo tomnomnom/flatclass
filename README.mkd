@@ -1,0 +1,3 @@
+# FlatClass
+
+POC/Playing around with using reflection and some hackery to flatten a PHP class hierarchy.
