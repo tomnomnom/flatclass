@@ -35,16 +35,17 @@ class Flatterer {
         if (sizeOf($interfaces) > 0){
             $out .= "implements ";
             $out .= implode(',', array_map(function($interface){
-                return $interface->getName();
+                return '\\'.$interface->getName();
             }, $interfaces));
             $out .= ' ';
         }
 
         $out .= "{\n\n";
 
-        // Properties (TODO: Default values)
+        // Properties
+        $defaults = $rc->getDefaultProperties();
         foreach ($rc->getProperties() as $property){
-            $out .= '    '.$this->getPropertySource($property).PHP_EOL;
+            $out .= '    '.$this->getPropertySource($property, $defaults).PHP_EOL;
         }
         $out .= PHP_EOL;
 
@@ -73,7 +74,7 @@ class Flatterer {
         return implode('', $lines);
     }
 
-    protected function getPropertySource(\ReflectionProperty $p){
+    protected function getPropertySource(\ReflectionProperty $p, array $defaults){
         $o = '';
         if ($p->isPrivate()){
             $o .= 'private ';
@@ -87,7 +88,14 @@ class Flatterer {
             $o .= 'static ';
         }
 
-        $o .= '$'.$p->getName().';';
+        $o .= '$'.$p->getName();
+
+        if (isset($defaults[$p->getName()])){
+            $val = $defaults[$p->getName()];
+            $o .= ' = '.var_export($val, true);
+        }
+
+        $o .= ';';
 
         return $o;
     }

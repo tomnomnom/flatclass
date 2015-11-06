@@ -2,7 +2,14 @@
 namespace Test;
 
 class FlattererTest extends \PHPUnit_Framework_TestCase {
-    public function testSimple(){
+
+    protected function fixture(){
+        // We can't go on recreating classes for every test now, can we?
+        static $child, $fchild;
+        if (isset($child) && isset($fchild)){
+            return [$child, $fchild];
+        }
+
         $f = new \Flatclass\Flatterer('\Test\ExampleChild'); 
         $code = $f->flatten('FlattenedChild');
         eval($code);
@@ -10,8 +17,28 @@ class FlattererTest extends \PHPUnit_Framework_TestCase {
         $child = new ExampleChild('Parent Prop', 'Child Prop');
         $fchild = new FlattenedChild('Parent Prop', 'Child Prop');
 
+        return [$child, $fchild];
+    }
+
+    public function testProperties(){
+        list($child, $fchild) = $this->fixture();
+
         $this->assertEquals($child->getChildProperty(), $fchild->getChildProperty());
         $this->assertEquals($child->getParentProperty(), $fchild->getParentProperty());
+    }
+
+    public function testInterfaces(){
+        list($child, $fchild) = $this->fixture();
+
+        $this->assertTrue($child instanceof ExampleInterface);
+        $this->assertTrue($fchild instanceof ExampleInterface);
+    }
+
+    public function testDefaultProperties(){
+        list($child, $fchild) = $this->fixture();
+
+        $this->assertEquals('default', $child->defaultProperty);
+        $this->assertEquals('default', $fchild->defaultProperty);
     }
 
     public function testOrphan(){
@@ -25,7 +52,12 @@ class FlattererTest extends \PHPUnit_Framework_TestCase {
 
 }
 
-class ExampleParent {
+interface ExampleInterface {
+    public function getParentProperty();
+}
+
+class ExampleParent implements ExampleInterface {
+    public $defaultProperty = 'default';
     public $parentProperty;
 
     public function __construct($prop){
