@@ -1,0 +1,24 @@
+{
+    "name": "tomnomnom/flatclass",
+    "description": "",
+    "homepage": "https://github.com/TomNomNom/flatclass",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tom Hudson",
+            "email": "mail@tomnomnom.com",
+            "homepage": "http://tomhudson.co.uk/"
+        }
+    ],
+    "require": {
+
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flatclass\\": ["src/"]
+        }
+    }
+}
