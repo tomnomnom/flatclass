@@ -17,7 +17,7 @@ class FlattererTest extends \PHPUnit_Framework_TestCase {
         $child = new ExampleChild('Parent Prop', 'Child Prop');
         $fchild = new FlattenedChild('Parent Prop', 'Child Prop');
 
-        return ($child, $fchild);
+        return array($child, $fchild);
     }
 
     public function testProperties(){

@@ -1,3 +1,62 @@
-# FlatClass
+# Flatclass
 
-POC/Playing around with using reflection and some hackery to flatten a PHP class hierarchy.
+Given an object or class name, the `Flatterer` returns a 'flattened' version of a class;
+i.e. with non-overridden methods and properties from parent classes copied into it.
+
+For example, the following code:
+
+```php
+<?php
+require __DIR__.'/vendor/autoload.php';
+
+interface Nameable {
+    public function getName();
+}
+
+class Animal implements Nameable {
+    protected $name;
+    public function __construct($name){
+        $this->name = $name;
+    }
+    public function getName(){
+        return $this->name;
+    }
+}
+
+class Dog extends Animal {
+    public function bark(){
+        return "Woof!";
+    }
+}
+
+$f = new \Flatclass\Flatterer('Dog');
+echo $f->flatten('FlatDog');
+```
+
+Would produce a `FlatDog` class that looked like this:
+
+```php
+<?php
+class FlatDog extends \Animal implements \Nameable {
+
+    protected $name;
+
+    // From class Dog
+    public function bark(){
+        return "Woof!";
+    }
+
+    // From class Animal
+    public function __construct($name){
+        $this->name = $name;
+    }
+
+    // From class Animal
+    public function getName(){
+        return $this->name;
+    }
+
+}
+```
+
+
