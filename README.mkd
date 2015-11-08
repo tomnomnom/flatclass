@@ -59,4 +59,11 @@ class FlatDog extends \Animal implements \Nameable {
 }
 ```
 
+## Why?
 
+This is meant as a debugging tool. With very deep inheritance hierarchies it can be difficult to
+mentally follow code execution paths that jump back and forth between several files.
+
+While the generated class is not guaranteed to function in the same way as the original, some efforts
+are made to make it more likely; e.g. the resulting class has the same parent as the original to
+allow `parent::method()` calls to work.
