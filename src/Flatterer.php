@@ -8,7 +8,7 @@ class Flatterer {
         $this->target = $target;
     }
 
-    function flatten($name = null){
+    public function flatten($name = null){
         $rc = new \ReflectionClass($this->target);
         $out = '';
 
